@@ -2,11 +2,18 @@
 
 namespace App\Repository\Budget;
 
+use App\Entity\Budget\Budget;
 use App\Entity\Budget\BudgetInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class BudgetRepository extends ServiceEntityRepository implements BudgetRepositoryInterface
 {
+    public function __construct(RegistryInterface $registry)
+    {
+        parent::__construct($registry, Budget::class);
+    }
+
     public function get(integer $id): BudgetInterface
     {
         return $this->find($id);

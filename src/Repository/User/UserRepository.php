@@ -2,11 +2,18 @@
 
 namespace App\Repository\User;
 
+use App\Entity\User\User;
 use App\Entity\User\UserInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class UserRepository extends ServiceEntityRepository implements UserRepositoryInterface
 {
+    public function __construct(RegistryInterface $registry)
+    {
+        parent::__construct($registry, User::class);
+    }
+
     public function get(integer $id): UserInterface
     {
         return $this->find($id);
