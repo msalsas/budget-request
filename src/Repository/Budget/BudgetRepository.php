@@ -14,9 +14,11 @@ class BudgetRepository extends ServiceEntityRepository implements BudgetReposito
         parent::__construct($registry, Budget::class);
     }
 
-    public function get(integer $id): BudgetInterface
+    public function get(int $id): BudgetInterface
     {
-        return $this->find($id);
+        /** @var BudgetInterface $budget */
+        $budget = $this->find($id);
+        return $budget;
     }
 
     public function create(BudgetInterface $budget)

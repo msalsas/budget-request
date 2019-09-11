@@ -9,9 +9,9 @@ interface UserRepositoryInterface
     public function findBy(array $criteria, ?array $orderBy = NULL, $limit = NULL, $offset = NULL);
     public function findOneBy(array $criteria, array $orderBy = null);
 
-    public function get(integer $id): UserInterface;
+    public function get(string $email): ?UserInterface;
     public function create(UserInterface $user);
     public function update(UserInterface $user);
-    public function delete(integer $id);
-    public function exists(integer $id): boolean;
+    public function delete(UserInterface $user);
+    public function exists(UserInterface $user): boolean;
 }

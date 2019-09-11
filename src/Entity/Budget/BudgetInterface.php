@@ -6,8 +6,8 @@ use App\Entity\User\UserInterface;
 
 interface BudgetInterface
 {
-    public function getId(): integer;
-    public function setId(integer $id);
+    public function getId(): int;
+    public function setId(int $id);
     public function getTitle(): string;
     public function setTitle(string $title);
     public function getDescription(): string;

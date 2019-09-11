@@ -3,11 +3,14 @@
 namespace App\Entity\User;
 
 use Doctrine\Common\Collections\Collection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\User\UserRepository")
  * @ORM\Table(name="user")
+ * @UniqueEntity("email")
  */
 class User implements UserInterface
 {
@@ -18,15 +21,22 @@ class User implements UserInterface
      */
     protected $id;
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=64, unique=true)
+     * @Assert\NotBlank
+     * @Assert\Email
+     * @Assert\Length(max=64)
      */
     protected $email;
     /**
      * @ORM\Column(type="string", length=32)
+     * @Assert\NotBlank
+     * @Assert\Length(max=32)
      */
     protected $telephone;
     /**
      * @ORM\Column(type="string", length=128)
+     * @Assert\NotBlank
+     * @Assert\Length(max=128)
      */
     protected $address;
     /**
@@ -34,12 +44,12 @@ class User implements UserInterface
      */
     protected $budgets;
 
-    public function getId(): integer
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId(integer $id)
+    public function setId(int $id)
     {
         $this->id = $id;
     }
@@ -83,6 +93,4 @@ class User implements UserInterface
     {
         $this->budgets = $budgets;
     }
-
-
 }

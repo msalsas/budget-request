@@ -14,14 +14,16 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         parent::__construct($registry, User::class);
     }
 
-    public function get(integer $id): UserInterface
+    public function get(string $email): UserInterface
     {
-        return $this->find($id);
+        /** @var UserInterface $user */
+        $user = $this->findOneBy(array('email' => $email));
+        return $user;
     }
 
     public function create(UserInterface $user)
     {
-        if($this->exists($user->getId())) {
+        if($this->exists($user)) {
             throw new \Exception("User already exists");
         }
 
@@ -31,7 +33,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
 
     public function update(UserInterface $user)
     {
-        if(!$this->exists($user->getId())) {
+        if(!$this->exists($user)) {
             throw new \Exception("User does not exist");
         }
 
@@ -39,19 +41,19 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         $this->getEntityManager()->flush();
     }
 
-    public function delete(integer $id)
+    public function delete(UserInterface $user)
     {
-        if(!$this->exists($id)) {
+        if(!$this->exists($user)) {
             throw new \Exception("User does not exist");
         }
 
-        $user = $this->get($id);
+        $user = $this->get($user->getEmail());
         $this->getEntityManager()->remove($user);
         $this->getEntityManager()->flush();
     }
 
-    public function exists(integer $id): boolean
+    public function exists(UserInterface $user): boolean
     {
-        return !!$this->find($id);
+        return !!$this->get($user->getEmail());
     }
 }

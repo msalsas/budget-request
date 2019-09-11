@@ -4,8 +4,8 @@ namespace App\Entity\User;
 
 interface UserInterface
 {
-    public function getId(): integer;
-    public function setId(integer $id);
+    public function getId(): int;
+    public function setId(int $id);
     public function getEmail(): string;
     public function setEmail(string $email);
     public function getTelephone(): string ;
