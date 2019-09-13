@@ -15,6 +15,7 @@
         "symfony/yaml": "4.3.*"
     },
     "require-dev": {
+        "symfony/browser-kit": "4.3.*",
         "symfony/phpunit-bridge": "^4.3"
     },
     "config": {
