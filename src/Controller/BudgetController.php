@@ -18,6 +18,6 @@ class BudgetController extends AbstractController
     {
         $budgets = $budgetService->getAllPaginated();
 
-        return new Response($budgets);
+        return new Response(json_encode($budgets));
     }
 }
