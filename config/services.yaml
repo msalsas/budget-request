@@ -17,6 +17,8 @@ services:
         resource: '../src/Service/*'
     App\Repository\:
         resource: '../src/Repository/*'
+    App\DataFixtures\:
+        resource: '../src/DataFixtures/*'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
