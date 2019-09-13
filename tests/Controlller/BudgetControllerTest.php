@@ -2,16 +2,37 @@
 
 namespace Test\Controller;
 
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class BudgetControllerTest extends WebTestCase
 {
-    public function testShowAllBudgets()
+    /**
+     * @var KernelBrowser
+     */
+    protected $client;
+
+    public function setUp()
     {
-        $client = static::createClient();
+        $this->client = static::createClient();
+    }
 
-        $client->request('GET', '/budget/get');
+    public function testGetAllStatusCode()
+    {
+        $this->client->request('GET', '/budget/get');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testGetAllEmptyArray()
+    {
+        $this->client->request('GET', '/budget/get');
+
+        $this->assertEquals($this->toJson([]), $this->client->getResponse()->getContent());
+    }
+
+    protected function toJson(array $array)
+    {
+        return json_encode($array);
     }
 }

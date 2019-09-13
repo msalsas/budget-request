@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class BudgetController extends AbstractController
 {
     /**
-     * @Route("/budget/get", name="show_all")
+     * @Route("/budget/get", name="get_all")
      * @param $budgetService BudgetService
      * @return Response
      */
