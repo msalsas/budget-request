@@ -22,7 +22,7 @@ class Budget implements BudgetInterface
      */
     protected $id;
     /**
-     * @ORM\Column(type="string", length=128, nullable="true")
+     * @ORM\Column(type="string", length=128, nullable=true)
      * @Assert\Length(max=128)
      */
     protected $title;
@@ -33,7 +33,7 @@ class Budget implements BudgetInterface
      */
     protected $description;
     /**
-     * @ORM\Column(type="string", length=64, nullable="true")
+     * @ORM\Column(type="string", length=64, nullable=true)
      * @Assert\Length(max=64)
      */
     protected $category;

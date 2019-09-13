@@ -367,11 +367,16 @@ class BudgetServiceTest extends TestCase
             ->method('findBy')
             ->willReturn($budgets);
 
+        $userRepositoryMock = $this->createMock(UserRepositoryInterface::class);
+        $userRepositoryMock->expects($this->once())
+            ->method('findOneBy')
+            ->willReturn($this->getUser());
+
         $emMock = $this->createMock(EntityManagerInterface::class);
         $emMock->expects($this->any())
             ->method('getRepository')
-            ->with(Budget::class)
-            ->willReturn($budgetRepositoryMock);
+            ->withConsecutive([User::class], [Budget::class])
+            ->willReturn($userRepositoryMock, $budgetRepositoryMock);
 
         $budgetService = new BudgetService($emMock);
 
@@ -388,11 +393,17 @@ class BudgetServiceTest extends TestCase
             ->method('findBy')
             ->willReturn($budgets);
 
+        $userRepositoryMock = $this->createMock(UserRepositoryInterface::class);
+        $userRepositoryMock->expects($this->once())
+            ->method('findOneBy')
+            ->willReturn($this->getUser());
+
+
         $emMock = $this->createMock(EntityManagerInterface::class);
         $emMock->expects($this->any())
             ->method('getRepository')
-            ->with(Budget::class)
-            ->willReturn($budgetRepositoryMock);
+            ->withConsecutive([User::class], [Budget::class])
+            ->willReturn($userRepositoryMock, $budgetRepositoryMock);
 
         $budgetService = new BudgetService($emMock);
 

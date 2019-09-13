@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class BudgetService
 {
     const EMAIL = "email";
+    const USER = "user";
 
     protected $em;
 
@@ -74,11 +75,17 @@ class BudgetService
         $this->getBudgetRepository()->update($budget);
     }
 
-    public function getAllPaginated(string $email = null, int $offset = 0, int $limit = 20, array $orderBy = [self::EMAIL])
+    public function getAllPaginated(string $email = null, int $offset = 0, int $limit = 20, array $orderBy = [self::EMAIL => 'ASC'])
     {
-        $budgetRepository = $this->getBudgetRepository();
+        $userRepository = $this->getUserRepository();
+        $user =$userRepository->findOneBy([self::EMAIL => $email]);
 
-        return $budgetRepository->findBy([self::EMAIL => $email], $orderBy, $limit, $offset);
+        if ($user) {
+            $budgetRepository = $this->getBudgetRepository();
+            return $budgetRepository->findBy([self::USER => $user], $orderBy, $limit, $offset);
+        }
+
+        return array();
     }
 
     protected function exists(integer $id)
