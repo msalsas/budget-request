@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\Collection;
 
 interface UserInterface
 {
-    public function getId(): int;
+    public function getId(): ?int;
     public function setId(int $id);
     public function getEmail(): string;
     public function setEmail(string $email);

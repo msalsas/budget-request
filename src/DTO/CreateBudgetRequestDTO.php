@@ -38,72 +38,45 @@ class CreateBudgetRequestDTO implements BudgetRequestDTOInterface
 
     public function __construct(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
-        $this->title = $data['title'];
-        $this->description = $data['description'];
-        $this->category = $data['category'];
-        $this->email = $data['email'];
-        $this->telephone = $data['telephone'];
-        $this->address = $data['address'];
+        $content = $request->request->all();
+        if ($content && isset($content[0])) {
+            $data = json_decode($content[0], true);
+            $this->title = $data['title'];
+            $this->description = $data['description'];
+            $this->category = $data['category'];
+            $this->email = $data['email'];
+            $this->telephone = $data['telephone'];
+            $this->address = $data['address'];
+        }
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function getCategory()
+    public function getCategory(): string
     {
         return $this->category;
     }
 
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function getTelephone()
+    public function getTelephone(): string
     {
         return $this->telephone;
     }
 
-    public function getAddress()
+    public function getAddress(): string
     {
         return $this->address;
-    }
-
-    public function setTitle(string $title)
-    {
-        $this->title = $title;
-    }
-
-    public function setDescription(string $description)
-    {
-        $this->description = $description;
-    }
-
-    public function setCategory(string $category)
-    {
-        $this->category = $category;
-    }
-
-    public function setEmail(string $email)
-    {
-        $this->email = $email;
-    }
-
-    public function setTelephone(string $telephone)
-    {
-        $this->telephone = $telephone;
-    }
-
-    public function setAddress(string $address)
-    {
-        $this->address = $address;
     }
 }

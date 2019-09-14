@@ -23,7 +23,7 @@ class BudgetRepository extends ServiceEntityRepository implements BudgetReposito
 
     public function create(BudgetInterface $budget)
     {
-        if($this->exists($budget->getId())) {
+        if($budget->getId() && $this->exists($budget->getId())) {
             throw new \Exception("User already exists");
         }
 
@@ -41,7 +41,7 @@ class BudgetRepository extends ServiceEntityRepository implements BudgetReposito
         $this->getEntityManager()->flush();
     }
 
-    public function delete(integer $id)
+    public function delete(int $id)
     {
         if(!$this->exists($id)) {
             throw new \Exception("User does not exist");
@@ -52,7 +52,7 @@ class BudgetRepository extends ServiceEntityRepository implements BudgetReposito
         $this->getEntityManager()->flush();
     }
 
-    public function exists(integer $id): boolean
+    public function exists(int $id): bool
     {
         return !!$this->find($id);
     }

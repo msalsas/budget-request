@@ -2,6 +2,7 @@
 
 namespace App\Entity\User;
 
+use App\DTO\BudgetRequestDTOInterface;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -44,7 +45,7 @@ class User implements UserInterface
      */
     protected $budgets;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -92,5 +93,15 @@ class User implements UserInterface
     function setBudgets(Collection $budgets)
     {
         $this->budgets = $budgets;
+    }
+
+    public static function fromDTO(BudgetRequestDTOInterface $budgetRequestDTO)
+    {
+        $user = new self;
+        $user->setEmail($budgetRequestDTO->getEmail());
+        $user->setTelephone($budgetRequestDTO->getTelephone());
+        $user->setAddress($budgetRequestDTO->getAddress());
+
+        return $user;
     }
 }

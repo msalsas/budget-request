@@ -12,6 +12,6 @@ interface BudgetRepositoryInterface
     public function get(int $id): BudgetInterface;
     public function create(BudgetInterface $budget);
     public function update(BudgetInterface $budget);
-    public function delete(integer $id);
-    public function exists(integer $id): boolean;
+    public function delete(int $id);
+    public function exists(int $id): bool;
 }

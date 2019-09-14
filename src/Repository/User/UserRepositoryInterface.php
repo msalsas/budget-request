@@ -13,5 +13,5 @@ interface UserRepositoryInterface
     public function create(UserInterface $user);
     public function update(UserInterface $user);
     public function delete(UserInterface $user);
-    public function exists(UserInterface $user): boolean;
+    public function exists(string $email): bool;
 }

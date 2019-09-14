@@ -2,6 +2,7 @@
 
 namespace App\Entity\Budget;
 
+use App\DTO\BudgetRequestDTOInterface;
 use App\Entity\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -49,7 +50,7 @@ class Budget implements BudgetInterface
      */
     protected $user;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -116,5 +117,15 @@ class Budget implements BudgetInterface
             self::STATUS_PUBLISHED,
             self::STATUS_DISCARDED,
         ];
+    }
+
+    public static function fromDTO(BudgetRequestDTOInterface $budgetRequestDTO)
+    {
+        $budget = new self;
+        $budget->setTitle($budgetRequestDTO->getTitle());
+        $budget->setDescription($budgetRequestDTO->getDescription());
+        $budget->setCategory($budgetRequestDTO->getCategory());
+
+        return $budget;
     }
 }
