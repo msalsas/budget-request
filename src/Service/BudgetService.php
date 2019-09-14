@@ -9,6 +9,7 @@ use App\Entity\User\UserInterface;
 use App\Repository\Budget\BudgetRepositoryInterface;
 use App\Repository\User\UserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BudgetService
 {
@@ -77,17 +78,23 @@ class BudgetService
         $this->getBudgetRepository()->update($budget);
     }
 
-    public function getAllPaginated(string $email = null, int $offset = 0, int $limit = 20, array $orderBy = [self::EMAIL => self::ASC])
+    public function getAllPaginated(string $email = null, int $offset = 0, int $limit = 20, array $orderBy = [self::TITLE => self::ASC])
     {
         $userRepository = $this->getUserRepository();
         $budgetRepository = $this->getBudgetRepository();
-        $user =$userRepository->findOneBy([self::EMAIL => $email]);
 
-        if ($user) {
-            return $budgetRepository->findBy([self::USER => $user], $orderBy, $limit, $offset);
+        if ($email) {
+            /** @var UserInterface $user */
+            $user = $userRepository->findOneBy([self::EMAIL => $email]);
+
+            if ($user) {
+                return $user->getBudgets();
+            } else {
+                throw new NotFoundHttpException(sprintf("User with email %s not found", $email));
+            }
         }
 
-        return $budgetRepository->findBy([], [self::TITLE => self::ASC], $limit, $offset);
+        return $budgetRepository->findBy([], $orderBy, $limit, $offset);
     }
 
     protected function exists(integer $id)

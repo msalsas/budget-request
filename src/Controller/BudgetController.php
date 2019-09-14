@@ -11,13 +11,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class BudgetController extends AbstractController
 {
     /**
-     * @Route("/budget/get", name="get_all")
+     * @Route("/budget/get/{email}", name="get_all")
+     * @param $email string
      * @param $budgetService BudgetService
      * @return Response
      */
-    public function getAll(BudgetService $budgetService)
+    public function getAll(string $email = null, BudgetService $budgetService)
     {
-        $budgets = $budgetService->getAllPaginated();
+        $budgets = $budgetService->getAllPaginated($email);
 
         return GetBudgetsResponseDTO::toDTO($budgets);
     }

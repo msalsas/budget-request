@@ -7,6 +7,7 @@ use App\Entity\User\User;
 use App\Repository\Budget\BudgetRepositoryInterface;
 use App\Repository\User\UserRepositoryInterface;
 use App\Service\BudgetService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
@@ -368,9 +369,8 @@ class BudgetServiceTest extends TestCase
             ->willReturn($budgets);
 
         $userRepositoryMock = $this->createMock(UserRepositoryInterface::class);
-        $userRepositoryMock->expects($this->once())
-            ->method('findOneBy')
-            ->willReturn($this->getUser());
+        $userRepositoryMock->expects($this->never())
+            ->method('findOneBy');
 
         $emMock = $this->createMock(EntityManagerInterface::class);
         $emMock->expects($this->any())
@@ -389,7 +389,7 @@ class BudgetServiceTest extends TestCase
     {
         $budgets = $this->getBudgetList();
         $budgetRepositoryMock = $this->createMock(BudgetRepositoryInterface::class);
-        $budgetRepositoryMock->expects($this->once())
+        $budgetRepositoryMock->expects($this->never())
             ->method('findBy')
             ->willReturn($budgets);
 
@@ -492,16 +492,17 @@ class BudgetServiceTest extends TestCase
         $user->setEmail(self::USER_EMAIL);
         $user->setAddress(self::USER_ADDRESS);
         $user->setTelephone(self::USER_TELEPHONE);
+        $user->setBudgets($this->getBudgetList());
 
         return $user;
     }
 
     protected function getBudgetList()
     {
-        return array(
+        return new ArrayCollection(array(
             $this->getPendingBudgetWithId(),
             $this->getPublishedBudgetWithId(),
             $this->getDiscardedBudgetWithId(),
-        );
+        ));
     }
 }

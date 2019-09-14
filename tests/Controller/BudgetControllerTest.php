@@ -56,6 +56,7 @@ class BudgetControllerTest extends WebTestCase
         $content = $this->client->getResponse()->getContent();
         $budgets = $this->toArray($content);
         $this->assertIsArray($budgets);
+        $this->assertEquals(2, count($budgets));
 
         $this->assertEquals(EntityCreationHelper::TITLE_A, $budgets[0][GetBudgetsResponseDTO::TITLE]);
         $this->assertEquals(EntityCreationHelper::DESCRIPTION_A, $budgets[0][GetBudgetsResponseDTO::DESCRIPTION]);
@@ -66,6 +67,30 @@ class BudgetControllerTest extends WebTestCase
         $this->assertEquals(EntityCreationHelper::CATEGORY_B, $budgets[1][GetBudgetsResponseDTO::CATEGORY]);
     }
 
+    public function testGetAllByEmailFilledArray()
+    {
+        EntityCreationHelper::createUsersAndBudgets($this->entityManager);
+
+        $this->client->request('GET', '/budget/get/' . EntityCreationHelper::EMAIL_A);
+        $content = $this->client->getResponse()->getContent();
+        $budgets = $this->toArray($content);
+        $this->assertIsArray($budgets);
+
+        $this->assertEquals(1, count($budgets));
+
+        $this->assertEquals(EntityCreationHelper::TITLE_A, $budgets[0][GetBudgetsResponseDTO::TITLE]);
+        $this->assertEquals(EntityCreationHelper::DESCRIPTION_A, $budgets[0][GetBudgetsResponseDTO::DESCRIPTION]);
+        $this->assertEquals(EntityCreationHelper::CATEGORY_A, $budgets[0][GetBudgetsResponseDTO::CATEGORY]);
+    }
+
+    public function testGetAllByWrongEmailThrowsException()
+    {
+        EntityCreationHelper::createUsersAndBudgets($this->entityManager);
+
+        $this->expectException(\Exception::class);
+
+        $this->client->request('GET', '/budget/get/' . EntityCreationHelper::WRONG_EMAIL);
+    }
 
     protected function toJson(array $array)
     {

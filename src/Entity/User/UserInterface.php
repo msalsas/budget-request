@@ -2,6 +2,8 @@
 
 namespace App\Entity\User;
 
+use Doctrine\Common\Collections\Collection;
+
 interface UserInterface
 {
     public function getId(): int;
@@ -12,4 +14,6 @@ interface UserInterface
     public function setTelephone(string $telephone);
     public function getAddress(): string;
     public function setAddress(string $address);
+    public function getBudgets(): Collection;
+    public function setBudgets(Collection $budgets);
 }
