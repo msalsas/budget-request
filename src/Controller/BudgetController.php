@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\GetBudgetsResponseDTO;
 use App\Service\BudgetService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +19,6 @@ class BudgetController extends AbstractController
     {
         $budgets = $budgetService->getAllPaginated();
 
-        return new Response(json_encode($budgets));
+        return GetBudgetsResponseDTO::toDTO($budgets);
     }
 }

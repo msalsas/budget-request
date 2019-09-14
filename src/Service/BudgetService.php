@@ -14,6 +14,8 @@ class BudgetService
 {
     const EMAIL = "email";
     const USER = "user";
+    const TITLE = "title";
+    const ASC = "ASC";
 
     protected $em;
 
@@ -75,17 +77,17 @@ class BudgetService
         $this->getBudgetRepository()->update($budget);
     }
 
-    public function getAllPaginated(string $email = null, int $offset = 0, int $limit = 20, array $orderBy = [self::EMAIL => 'ASC'])
+    public function getAllPaginated(string $email = null, int $offset = 0, int $limit = 20, array $orderBy = [self::EMAIL => self::ASC])
     {
         $userRepository = $this->getUserRepository();
+        $budgetRepository = $this->getBudgetRepository();
         $user =$userRepository->findOneBy([self::EMAIL => $email]);
 
         if ($user) {
-            $budgetRepository = $this->getBudgetRepository();
             return $budgetRepository->findBy([self::USER => $user], $orderBy, $limit, $offset);
         }
 
-        return array();
+        return $budgetRepository->findBy([], [self::TITLE => self::ASC], $limit, $offset);
     }
 
     protected function exists(integer $id)
