@@ -20,7 +20,6 @@ matrix:
           env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="max[self]=0"
 
           # Test the latest stable release
-        - php: 7.2
         - php: 7.3
           env: COVERAGE=true PHPUNIT_FLAGS="-v --coverage-text"
 
