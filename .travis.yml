@@ -34,7 +34,7 @@ matrix:
 
 before_install:
     - composer self-update
-    - composer install --prefer-source --no-interaction --dev
+    - composer install
 
 install:
     - composer install
