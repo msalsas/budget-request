@@ -3,10 +3,9 @@
 namespace App\Controller;
 
 use App\DTO\CreateBudgetRequestDTO;
+use App\DTO\GetBudgetsRequestDTO;
 use App\DTO\GetBudgetsResponseDTO;
 use App\DTO\UpdateBudgetRequestDTO;
-use App\Entity\Budget\Budget;
-use App\Entity\User\User;
 use App\Service\BudgetService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,14 +16,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class BudgetController extends AbstractController
 {
     /**
-     * @Route("/budget/{email}", name="get_all", methods={"GET"}, requirements={"email"="(\w+@\w+\.\w+)?"})
-     * @param $email string
+     * @Route("/budget", name="get_all", methods={"GET"})
+     * @param $request Request
      * @param $budgetService BudgetService
      * @return Response
      */
-    public function getAll(string $email = null, BudgetService $budgetService)
+    public function getAll(Request $request, BudgetService $budgetService)
     {
-        $budgets = $budgetService->getAllPaginated($email);
+        $getBudgetRequestDTO = new GetBudgetsRequestDTO($request);
+        $email = $getBudgetRequestDTO->getEmail() ?: null;
+        $offset = $getBudgetRequestDTO->getOffset() ?: 0;
+        $limit = $getBudgetRequestDTO->getLimit() ?: 20;
+
+        $budgets = $budgetService->getAllPaginated($email, $offset, $limit);
 
         return GetBudgetsResponseDTO::toDTO($budgets);
     }

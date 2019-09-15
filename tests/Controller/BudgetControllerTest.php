@@ -80,7 +80,7 @@ class BudgetControllerTest extends WebTestCase
     {
         EntityCreationHelper::createUsersAndBudgets($this->entityManager);
 
-        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_A);
         $content = $this->client->getResponse()->getContent();
         $budgets = $this->toArray($content);
         $this->assertIsArray($budgets);
@@ -102,7 +102,7 @@ class BudgetControllerTest extends WebTestCase
 
         $this->expectException(\Exception::class);
 
-        $this->client->request('GET', '/budget/' . EntityCreationHelper::WRONG_EMAIL);
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::WRONG_EMAIL);
     }
 
     public function testCreateNewBudgetStatus()
@@ -119,7 +119,7 @@ class BudgetControllerTest extends WebTestCase
         EntityCreationHelper::createUsersAndBudgets($this->entityManager);
 
         $this->createBudgetWithOtherEmail();
-        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_OTHER);
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_OTHER);
         $content = $this->client->getResponse()->getContent();
 
         $budgets = $this->toArray($content);
@@ -141,7 +141,7 @@ class BudgetControllerTest extends WebTestCase
         EntityCreationHelper::createUsersAndBudgets($this->entityManager);
 
         $this->createBudgetWithExistingEmail();
-        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_A);
         $content = $this->client->getResponse()->getContent();
 
         $budgets = $this->toArray($content);
@@ -194,7 +194,7 @@ class BudgetControllerTest extends WebTestCase
         EntityCreationHelper::createUsersAndBudgets($this->entityManager);
 
         $this->updateBudgetWithExistingId();
-        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_A);
         $content = $this->client->getResponse()->getContent();
 
         $budgets = $this->toArray($content);
@@ -236,7 +236,7 @@ class BudgetControllerTest extends WebTestCase
     {
         EntityCreationHelper::createUsersAndBudgets($this->entityManager);
 
-        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_A);
         $content = $this->client->getResponse()->getContent();
         $budgets = $this->toArray($content);
         $id = $budgets[0][GetBudgetsResponseDTO::ID];
@@ -249,14 +249,14 @@ class BudgetControllerTest extends WebTestCase
     {
         EntityCreationHelper::createUsersAndBudgets($this->entityManager);
 
-        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_A);
         $content = $this->client->getResponse()->getContent();
         $budgets = $this->toArray($content);
         $id = $budgets[0][GetBudgetsResponseDTO::ID];
 
         $this->client->request('PUT', '/budget/publish/' . $id);
 
-        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_A);
         $content = $this->client->getResponse()->getContent();
 
         $budgets = $this->toArray($content);
@@ -287,7 +287,7 @@ class BudgetControllerTest extends WebTestCase
     {
         EntityCreationHelper::createUsersAndBudgets($this->entityManager);
 
-        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_A);
         $content = $this->client->getResponse()->getContent();
         $budgets = $this->toArray($content);
         $id = $budgets[0][GetBudgetsResponseDTO::ID];
@@ -300,14 +300,14 @@ class BudgetControllerTest extends WebTestCase
     {
         EntityCreationHelper::createUsersAndBudgets($this->entityManager);
 
-        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_A);
         $content = $this->client->getResponse()->getContent();
         $budgets = $this->toArray($content);
         $id = $budgets[0][GetBudgetsResponseDTO::ID];
 
         $this->client->request('PUT', '/budget/discard/' . $id);
 
-        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_A);
         $content = $this->client->getResponse()->getContent();
 
         $budgets = $this->toArray($content);
@@ -392,7 +392,7 @@ class BudgetControllerTest extends WebTestCase
 
     protected function updateBudgetWithExistingId()
     {
-        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_A);
         $content = $this->client->getResponse()->getContent();
         $budgets = $this->toArray($content);
         $id = $budgets[0][GetBudgetsResponseDTO::ID];
@@ -421,7 +421,7 @@ class BudgetControllerTest extends WebTestCase
 
     protected function updateBudgetWithWrongTitle()
     {
-        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_A);
         $content = $this->client->getResponse()->getContent();
         $budgets = $this->toArray($content);
         $id = $budgets[0][GetBudgetsResponseDTO::ID];
