@@ -241,7 +241,7 @@ class BudgetControllerTest extends WebTestCase
         $budgets = $this->toArray($content);
         $id = $budgets[0][GetBudgetsResponseDTO::ID];
 
-        $this->client->request('PUT', '/publish/' . $id);
+        $this->client->request('PUT', '/budget/publish/' . $id);
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
     }
 
@@ -254,7 +254,7 @@ class BudgetControllerTest extends WebTestCase
         $budgets = $this->toArray($content);
         $id = $budgets[0][GetBudgetsResponseDTO::ID];
 
-        $this->client->request('PUT', '/publish/' . $id);
+        $this->client->request('PUT', '/budget/publish/' . $id);
 
         $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
         $content = $this->client->getResponse()->getContent();
@@ -278,11 +278,60 @@ class BudgetControllerTest extends WebTestCase
         EntityCreationHelper::createUsersAndBudgets($this->entityManager);
 
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage("No route found for \"PUT /publish/1.0E+58");
+        $this->expectExceptionMessage('No route found for "PUT /budget/publish/1.0E+58"');
 
-        $this->client->request('PUT', '/publish/' . EntityCreationHelper::WRONG_ID);
+        $this->client->request('PUT', '/budget/publish/' . EntityCreationHelper::WRONG_ID);
+    }
 
-        $this->updateBudgetWithWrongId();
+    public function testDiscardBudgetStatus()
+    {
+        EntityCreationHelper::createUsersAndBudgets($this->entityManager);
+
+        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $content = $this->client->getResponse()->getContent();
+        $budgets = $this->toArray($content);
+        $id = $budgets[0][GetBudgetsResponseDTO::ID];
+
+        $this->client->request('PUT', '/budget/discard/' . $id);
+        $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testDiscardBudget()
+    {
+        EntityCreationHelper::createUsersAndBudgets($this->entityManager);
+
+        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $content = $this->client->getResponse()->getContent();
+        $budgets = $this->toArray($content);
+        $id = $budgets[0][GetBudgetsResponseDTO::ID];
+
+        $this->client->request('PUT', '/budget/discard/' . $id);
+
+        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $content = $this->client->getResponse()->getContent();
+
+        $budgets = $this->toArray($content);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(1, count($budgets));
+
+        $this->assertIsInt($budgets[0][GetBudgetsResponseDTO::ID]);
+        $this->assertEquals(EntityCreationHelper::TITLE_A, $budgets[0][GetBudgetsResponseDTO::TITLE]);
+        $this->assertEquals(EntityCreationHelper::DESCRIPTION_A, $budgets[0][GetBudgetsResponseDTO::DESCRIPTION]);
+        $this->assertEquals(EntityCreationHelper::CATEGORY_A, $budgets[0][GetBudgetsResponseDTO::CATEGORY]);
+        $this->assertEquals(EntityCreationHelper::EMAIL_A, $budgets[0][GetBudgetsResponseDTO::EMAIL]);
+        $this->assertEquals(EntityCreationHelper::TELEPHONE_A, $budgets[0][GetBudgetsResponseDTO::TELEPHONE]);
+        $this->assertEquals(EntityCreationHelper::ADDRESS_A, $budgets[0][GetBudgetsResponseDTO::ADDRESS]);
+        $this->assertEquals(Budget::STATUS_DISCARDED, $budgets[0][GetBudgetsResponseDTO::STATUS]);
+    }
+
+    public function testDiscardBudgetWrongIdThrowsException()
+    {
+        EntityCreationHelper::createUsersAndBudgets($this->entityManager);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('No route found for "PUT /budget/discard/1.0E+58"');
+
+        $this->client->request('PUT', '/budget/discard/' . EntityCreationHelper::WRONG_ID);
     }
 
     protected function createBudgetWithOtherEmail()

@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class BudgetController extends AbstractController
 {
     /**
-     * @Route("/budget/{email}", name="get_all", methods={"GET"})
+     * @Route("/budget/{email}", name="get_all", methods={"GET"}, requirements={"email"="(\w+@\w+\.\w+)?"})
      * @param $email string
      * @param $budgetService BudgetService
      * @return Response
@@ -72,7 +72,7 @@ class BudgetController extends AbstractController
     }
 
     /**
-     * @Route("/publish/{id}", name="publish", methods={"PUT"}, requirements={"id"="\d+"})
+     * @Route("/budget/publish/{id}", name="publish", methods={"PUT"}, requirements={"id"="\d+"})
      * @param $id int
      * @param $budgetService BudgetService
      * @return Response
@@ -81,6 +81,23 @@ class BudgetController extends AbstractController
     {
         try {
             $budgetService->publish($id);
+        } catch (\Exception $e) {
+            throw new HttpException(403, $e->getMessage());
+        }
+
+        return new Response("Success", 204);
+    }
+
+    /**
+     * @Route("/budget/discard/{id}", name="discard", methods={"PUT"}, requirements={"id"="\d+"})
+     * @param $id int
+     * @param $budgetService BudgetService
+     * @return Response
+     */
+    public function discard(int $id, BudgetService $budgetService)
+    {
+        try {
+            $budgetService->discard($id);
         } catch (\Exception $e) {
             throw new HttpException(403, $e->getMessage());
         }
