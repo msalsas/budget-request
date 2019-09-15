@@ -15,6 +15,8 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\Service\:
         resource: '../src/Service/*'
+    App\Validator\:
+        resource: '../src/Validator/*'
     App\Repository\:
         resource: '../src/Repository/*'
     App\DataFixtures\:

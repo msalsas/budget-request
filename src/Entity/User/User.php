@@ -4,14 +4,12 @@ namespace App\Entity\User;
 
 use App\DTO\BudgetRequestDTOInterface;
 use Doctrine\Common\Collections\Collection;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\User\UserRepository")
  * @ORM\Table(name="user")
- * @UniqueEntity("email")
  */
 class User implements UserInterface
 {

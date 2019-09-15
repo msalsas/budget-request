@@ -8,6 +8,7 @@ use App\Entity\User\User;
 use App\Entity\User\UserInterface;
 use App\Repository\Budget\BudgetRepositoryInterface;
 use App\Repository\User\UserRepositoryInterface;
+use App\Validator\Validator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -19,10 +20,12 @@ class BudgetService
     const ASC = "ASC";
 
     protected $em;
+    protected $validator;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, Validator $validator)
     {
         $this->em = $em;
+        $this->validator = $validator;
     }
 
     public function get(int $id)
@@ -32,21 +35,39 @@ class BudgetService
 
     public function create(BudgetInterface $budget, UserInterface $user)
     {
+        $this->validator->validate($user);
+
         $email = $user->getEmail();
         $userRepository = $this->getUserRepository();
 
-        if (!$userRepository->findOneBy([self::EMAIL => $email])) {
+        if (!$userRepository->exists($email)) {
             $userRepository->create($user);
+            $budget->setUser($user);
         } else {
-            $userRepository->update($user);
+            $existingUser = $userRepository->get($email);
+
+            if ($telephone = $user->getTelephone()) {
+                $existingUser->setTelephone($telephone);
+            }
+            if ($address = $user->getAddress()) {
+                $existingUser->setAddress($address);
+            }
+
+            $userRepository->update($existingUser);
+            $budget->setUser($existingUser);
         }
 
         $budget->setStatus(Budget::STATUS_PENDING);
+
+        $this->validator->validate($budget);
+
         $this->getBudgetRepository()->create($budget);
     }
 
     public function update(BudgetInterface $budget)
     {
+        $this->validator->validate($budget);
+
         $id = $budget->getId();
         $budgetRepository = $this->getBudgetRepository();
         $oldBudget = $budgetRepository->get($id);

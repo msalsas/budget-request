@@ -7,6 +7,7 @@ use App\Entity\User\User;
 use App\Repository\Budget\BudgetRepositoryInterface;
 use App\Repository\User\UserRepositoryInterface;
 use App\Service\BudgetService;
+use App\Validator\Validator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
@@ -30,8 +31,8 @@ class BudgetServiceTest extends TestCase
 
         $userRepositoryMock = $this->createMock(UserRepositoryInterface::class);
         $userRepositoryMock->expects($this->once())
-            ->method('findOneBy')
-            ->willReturn(null);
+            ->method('exists')
+            ->willReturn(false);
         $userRepositoryMock->expects($this->once())
             ->method('create');
         $userRepositoryMock->expects($this->never())
@@ -43,7 +44,11 @@ class BudgetServiceTest extends TestCase
             ->withConsecutive([User::class], [Budget::class])
             ->willReturn($userRepositoryMock, $budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $budgetService->create($this->getBudgetWithoutStatus(), $this->getUser());
     }
@@ -56,7 +61,10 @@ class BudgetServiceTest extends TestCase
 
         $userRepositoryMock = $this->createMock(UserRepositoryInterface::class);
         $userRepositoryMock->expects($this->once())
-            ->method('findOneBy')
+            ->method('exists')
+            ->willReturn(true);
+        $userRepositoryMock->expects($this->once())
+            ->method('get')
             ->willReturn($this->getUser());
         $userRepositoryMock->expects($this->never())
             ->method('create');
@@ -69,7 +77,11 @@ class BudgetServiceTest extends TestCase
             ->withConsecutive([User::class], [Budget::class])
             ->willReturn($userRepositoryMock, $budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $budgetService->create($this->getBudgetWithoutStatus(), $this->getUser());
     }
@@ -82,7 +94,7 @@ class BudgetServiceTest extends TestCase
 
         $userRepositoryMock = $this->createMock(UserRepositoryInterface::class);
         $userRepositoryMock->expects($this->never())
-            ->method('findOneBy')
+            ->method('exists')
             ->willReturn($this->getUser());
         $userRepositoryMock->expects($this->never())
             ->method('create');
@@ -95,7 +107,11 @@ class BudgetServiceTest extends TestCase
             ->withConsecutive([User::class], [Budget::class])
             ->willReturn($userRepositoryMock, $budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $this->expectException(\TypeError::class);
 
@@ -111,7 +127,10 @@ class BudgetServiceTest extends TestCase
 
         $userRepositoryMock = $this->createMock(UserRepositoryInterface::class);
         $userRepositoryMock->expects($this->once())
-            ->method('findOneBy')
+            ->method('exists')
+            ->willReturn(true);
+        $userRepositoryMock->expects($this->once())
+            ->method('get')
             ->willReturn($this->getUser());
         $userRepositoryMock->expects($this->never())
             ->method('create');
@@ -124,7 +143,11 @@ class BudgetServiceTest extends TestCase
             ->withConsecutive([User::class], [Budget::class])
             ->willReturn($userRepositoryMock, $budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $this->expectException(\Exception::class);
 
@@ -139,7 +162,10 @@ class BudgetServiceTest extends TestCase
 
         $userRepositoryMock = $this->createMock(UserRepositoryInterface::class);
         $userRepositoryMock->expects($this->once())
-            ->method('findOneBy')
+            ->method('exists')
+            ->willReturn(true);
+        $userRepositoryMock->expects($this->once())
+            ->method('get')
             ->willReturn($this->getUser());
         $userRepositoryMock->expects($this->never())
             ->method('create');
@@ -152,7 +178,11 @@ class BudgetServiceTest extends TestCase
             ->withConsecutive([User::class], [Budget::class])
             ->willReturn($userRepositoryMock, $budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $budget = $this->getPublishedBudgetWithoutDescription();
         $budgetService->create($budget, $this->getUser());
@@ -174,7 +204,11 @@ class BudgetServiceTest extends TestCase
 
         $this->expectException(\TypeError::class);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $budgetService->update($this->getBudgetWithoutStatus());
     }
@@ -195,7 +229,11 @@ class BudgetServiceTest extends TestCase
             ->with(Budget::class)
             ->willReturn($budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $budgetService->update($budget);
     }
@@ -212,7 +250,11 @@ class BudgetServiceTest extends TestCase
             ->with(Budget::class)
             ->willReturn($budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $this->expectException(\Exception::class);
 
@@ -232,7 +274,11 @@ class BudgetServiceTest extends TestCase
             ->with(Budget::class)
             ->willReturn($budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $this->expectException(\Exception::class);
 
@@ -256,7 +302,11 @@ class BudgetServiceTest extends TestCase
             ->with(Budget::class)
             ->willReturn($budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $budgetService->publish($budget->getId());
     }
@@ -273,7 +323,11 @@ class BudgetServiceTest extends TestCase
             ->with(Budget::class)
             ->willReturn($budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $this->expectException(\Exception::class);
 
@@ -292,7 +346,11 @@ class BudgetServiceTest extends TestCase
             ->with(Budget::class)
             ->willReturn($budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $this->expectException(\Exception::class);
 
@@ -315,7 +373,11 @@ class BudgetServiceTest extends TestCase
             ->with(Budget::class)
             ->willReturn($budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $budgetService->discard($budget->getId());
     }
@@ -336,7 +398,11 @@ class BudgetServiceTest extends TestCase
             ->with(Budget::class)
             ->willReturn($budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $budgetService->discard($budget->getId());
     }
@@ -353,7 +419,11 @@ class BudgetServiceTest extends TestCase
             ->with(Budget::class)
             ->willReturn($budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $this->expectException(\Exception::class);
 
@@ -378,7 +448,11 @@ class BudgetServiceTest extends TestCase
             ->withConsecutive([User::class], [Budget::class])
             ->willReturn($userRepositoryMock, $budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $paginatedBudgets = $budgetService->getAllPaginated();
 
@@ -405,7 +479,11 @@ class BudgetServiceTest extends TestCase
             ->withConsecutive([User::class], [Budget::class])
             ->willReturn($userRepositoryMock, $budgetRepositoryMock);
 
-        $budgetService = new BudgetService($emMock);
+        $validatorMock = $this->createMock(Validator::class);
+        $validatorMock->expects($this->any())
+            ->method('validate');
+
+        $budgetService = new BudgetService($emMock, $validatorMock);
 
         $paginatedBudgets = $budgetService->getAllPaginated($this->getUser()->getEmail());
 
