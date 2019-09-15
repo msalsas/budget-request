@@ -66,15 +66,25 @@ class BudgetService
 
     public function update(BudgetInterface $budget)
     {
-        $this->validator->validate($budget);
-
         $id = $budget->getId();
         $budgetRepository = $this->getBudgetRepository();
-        $oldBudget = $budgetRepository->get($id);
+        $existingBudget = $budgetRepository->get($id);
 
-        $this->validateUpdate($oldBudget, $budget);
+        $this->validateUpdate($existingBudget, $budget);
 
-        $this->getBudgetRepository()->update($budget);
+        if ($title = $budget->getTitle()) {
+            $existingBudget->setTitle($title);
+        }
+        if ($description = $budget->getDescription()) {
+            $existingBudget->setDescription($description);
+        }
+        if ($category = $budget->getCategory()) {
+            $existingBudget->setCategory($category);
+        }
+
+        $this->validator->validate($existingBudget);
+
+        $this->getBudgetRepository()->update($existingBudget);
     }
 
     public function publish(int $id)
@@ -163,16 +173,16 @@ class BudgetService
         }
     }
 
-    protected function validatePendingStatus(string $status)
+    protected function validatePendingStatus(string $status = null)
     {
-        if (!$this->isPendingStatus($status)) {
+        if (!$status || !$this->isPendingStatus($status)) {
             throw new \Exception(sprintf("Status is %s. It should be pending", $status));
         }
     }
 
-    protected function validatePendingOrPublishedStatus(string $status)
+    protected function validatePendingOrPublishedStatus(string $status = null)
     {
-        if (!$this->isPendingStatus($status) && !$this->isPublishedStatus($status)) {
+        if (!$status || !$this->isPendingStatus($status) && !$this->isPublishedStatus($status)) {
             throw new \Exception(sprintf("Status is %s. It should be pending or discarded", $status));
         }
     }

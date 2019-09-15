@@ -2,7 +2,7 @@
 
 namespace App\Entity\User;
 
-use App\DTO\BudgetRequestDTOInterface;
+use App\DTO\CreateBudgetRequestDTOInterface;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -53,7 +53,7 @@ class User implements UserInterface
         $this->id = $id;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -63,7 +63,7 @@ class User implements UserInterface
         $this->email = $email;
     }
 
-    public function getTelephone(): string
+    public function getTelephone(): ?string
     {
         return $this->telephone;
     }
@@ -73,7 +73,7 @@ class User implements UserInterface
         $this->telephone = $telephone;
     }
 
-    public function getAddress(): string
+    public function getAddress(): ?string
     {
         return $this->address;
     }
@@ -83,7 +83,7 @@ class User implements UserInterface
         $this->address = $address;
     }
 
-    public function getBudgets(): Collection
+    public function getBudgets(): ?Collection
     {
         return $this->budgets;
     }
@@ -93,7 +93,7 @@ class User implements UserInterface
         $this->budgets = $budgets;
     }
 
-    public static function fromDTO(BudgetRequestDTOInterface $budgetRequestDTO)
+    public static function fromDTO(CreateBudgetRequestDTOInterface $budgetRequestDTO)
     {
         $user = new self;
         $user->setEmail($budgetRequestDTO->getEmail());

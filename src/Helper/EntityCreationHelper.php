@@ -28,6 +28,13 @@ class EntityCreationHelper
     const DESCRIPTION_B = "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
     const CATEGORY_B = "Illumination";
 
+    const TITLE_OTHER = "Budget Other";
+    const DESCRIPTION_OTHER = "sunt in culpa qui officia deserunt mollit anim id est laborum.";
+    const CATEGORY_OTHER = "Other";
+
+
+    const WRONG_ID = 9999999999999999999999999999999999999999999999999999999999;
+    const WRONG_TITLE = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
     const WRONG_EMAIL = "NOT_A_REAL_EMAIL";
     const WRONG_TELEPHONE = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 

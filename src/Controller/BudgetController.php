@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\DTO\CreateBudgetRequestDTO;
 use App\DTO\GetBudgetsResponseDTO;
+use App\DTO\UpdateBudgetRequestDTO;
 use App\Entity\Budget\Budget;
 use App\Entity\User\User;
 use App\Service\BudgetService;
@@ -16,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class BudgetController extends AbstractController
 {
     /**
-     * @Route("/budget/{email}", name="get_all", methods={"GET"})
+     * @Route("/budget/{email}", name="get_all", methods={"GET"}, requirements={"id"="\w."})
      * @param $email string
      * @param $budgetService BudgetService
      * @return Response
@@ -47,5 +48,26 @@ class BudgetController extends AbstractController
         }
 
         return new Response("Success", 201);
+    }
+
+    /**
+     * @Route("/budget/{id}", name="update", methods={"PUT"}, requirements={"id"="\d+"})
+     * @param $id int
+     * @param $request Request
+     * @param $budgetService BudgetService
+     * @return Response
+     */
+    public function update(int $id, Request $request, BudgetService $budgetService)
+    {
+        $updateBudgetRequestDTO = new UpdateBudgetRequestDTO($id, $request);
+        $budget = Budget::fromDTO($updateBudgetRequestDTO);
+
+        try {
+            $budgetService->update($budget);
+        } catch (\Exception $e) {
+            throw new HttpException(403, $e->getMessage());
+        }
+
+        return new Response("Success", 204);
     }
 }

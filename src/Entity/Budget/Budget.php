@@ -3,6 +3,7 @@
 namespace App\Entity\Budget;
 
 use App\DTO\BudgetRequestDTOInterface;
+use App\DTO\UpdateBudgetRequestDTO;
 use App\Entity\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -70,7 +71,7 @@ class Budget implements BudgetInterface
         $this->title = $title;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -80,7 +81,7 @@ class Budget implements BudgetInterface
         $this->description = $description;
     }
 
-    public function getCategory(): string
+    public function getCategory(): ?string
     {
         return $this->category;
     }
@@ -90,7 +91,7 @@ class Budget implements BudgetInterface
         $this->category = $category;
     }
 
-    public function getStatus(): string
+    public function getStatus(): ?string
     {
         return $this->status;
     }
@@ -100,7 +101,7 @@ class Budget implements BudgetInterface
         $this->status = $status;
     }
 
-    public function getUser(): UserInterface
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
@@ -122,6 +123,9 @@ class Budget implements BudgetInterface
     public static function fromDTO(BudgetRequestDTOInterface $budgetRequestDTO)
     {
         $budget = new self;
+        if ($budgetRequestDTO instanceof UpdateBudgetRequestDTO) {
+            $budget->setId($budgetRequestDTO->getId());
+        }
         $budget->setTitle($budgetRequestDTO->getTitle());
         $budget->setDescription($budgetRequestDTO->getDescription());
         $budget->setCategory($budgetRequestDTO->getCategory());

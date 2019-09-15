@@ -180,6 +180,58 @@ class BudgetControllerTest extends WebTestCase
         $this->createBudgetWithWrongTelephone();
     }
 
+    public function testUpdateBudgetStatus()
+    {
+        EntityCreationHelper::createUsersAndBudgets($this->entityManager);
+
+        $this->updateBudgetWithExistingId();
+
+        $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testUpdateBudget()
+    {
+        EntityCreationHelper::createUsersAndBudgets($this->entityManager);
+
+        $this->updateBudgetWithExistingId();
+        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $content = $this->client->getResponse()->getContent();
+
+        $budgets = $this->toArray($content);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(1, count($budgets));
+
+        $this->assertIsInt($budgets[0][GetBudgetsResponseDTO::ID]);
+        $this->assertEquals(EntityCreationHelper::TITLE_OTHER, $budgets[0][GetBudgetsResponseDTO::TITLE]);
+        $this->assertEquals(EntityCreationHelper::DESCRIPTION_OTHER, $budgets[0][GetBudgetsResponseDTO::DESCRIPTION]);
+        $this->assertEquals(EntityCreationHelper::CATEGORY_OTHER, $budgets[0][GetBudgetsResponseDTO::CATEGORY]);
+        $this->assertEquals(EntityCreationHelper::EMAIL_A, $budgets[0][GetBudgetsResponseDTO::EMAIL]);
+        $this->assertEquals(EntityCreationHelper::TELEPHONE_A, $budgets[0][GetBudgetsResponseDTO::TELEPHONE]);
+        $this->assertEquals(EntityCreationHelper::ADDRESS_A, $budgets[0][GetBudgetsResponseDTO::ADDRESS]);
+        $this->assertEquals(Budget::STATUS_PENDING, $budgets[0][GetBudgetsResponseDTO::STATUS]);
+    }
+
+    public function testUpdateBudgetWrongIdThrowsException()
+    {
+        EntityCreationHelper::createUsersAndBudgets($this->entityManager);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("No route found for \"PUT /budget/1.0E+58");
+
+        $this->updateBudgetWithWrongId();
+    }
+
+    public function testUpdateBudgetWrongTitleThrowsException()
+    {
+        EntityCreationHelper::createUsersAndBudgets($this->entityManager);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("title:
+    This value is too long. It should have 128 characters or less. (code d94b19cc-114f-4f44-9cc4-4138e80a87b9)");
+
+        $this->updateBudgetWithWrongTitle();
+    }
+
     protected function createBudgetWithOtherEmail()
     {
         $parameters = array(
@@ -234,6 +286,51 @@ class BudgetControllerTest extends WebTestCase
         );
 
         $this->client->request('POST', '/budget', [json_encode($parameters, true)]);
+    }
+
+    protected function updateBudgetWithExistingId()
+    {
+        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $content = $this->client->getResponse()->getContent();
+        $budgets = $this->toArray($content);
+        $id = $budgets[0][GetBudgetsResponseDTO::ID];
+
+        $parameters = array(
+            GetBudgetsResponseDTO::TITLE => EntityCreationHelper::TITLE_OTHER,
+            GetBudgetsResponseDTO::DESCRIPTION => EntityCreationHelper::DESCRIPTION_OTHER,
+            GetBudgetsResponseDTO::CATEGORY => EntityCreationHelper::CATEGORY_OTHER,
+        );
+
+        $this->client->request('PUT', '/budget/' . $id, [json_encode($parameters, true)]);
+    }
+
+    protected function updateBudgetWithWrongId()
+    {
+        $id = EntityCreationHelper::WRONG_ID;
+
+        $parameters = array(
+            GetBudgetsResponseDTO::TITLE => EntityCreationHelper::TITLE_OTHER,
+            GetBudgetsResponseDTO::DESCRIPTION => EntityCreationHelper::DESCRIPTION_OTHER,
+            GetBudgetsResponseDTO::CATEGORY => EntityCreationHelper::CATEGORY_OTHER,
+        );
+
+        $this->client->request('PUT', '/budget/' . $id, [json_encode($parameters, true)]);
+    }
+
+    protected function updateBudgetWithWrongTitle()
+    {
+        $this->client->request('GET', '/budget/' . EntityCreationHelper::EMAIL_A);
+        $content = $this->client->getResponse()->getContent();
+        $budgets = $this->toArray($content);
+        $id = $budgets[0][GetBudgetsResponseDTO::ID];
+
+        $parameters = array(
+            GetBudgetsResponseDTO::TITLE => EntityCreationHelper::WRONG_TITLE,
+            GetBudgetsResponseDTO::DESCRIPTION => EntityCreationHelper::DESCRIPTION_OTHER,
+            GetBudgetsResponseDTO::CATEGORY => EntityCreationHelper::CATEGORY_OTHER,
+        );
+
+        $this->client->request('PUT', '/budget/' . $id, [json_encode($parameters, true)]);
     }
 
     protected function toJson(array $array)
