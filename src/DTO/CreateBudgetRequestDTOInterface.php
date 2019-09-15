@@ -2,6 +2,7 @@
 
 namespace App\DTO;
 
+use App\Entity\User\User;
 use Symfony\Component\HttpFoundation\Request;
 
 interface CreateBudgetRequestDTOInterface extends BudgetRequestDTOInterface
@@ -10,4 +11,5 @@ interface CreateBudgetRequestDTOInterface extends BudgetRequestDTOInterface
     public function getEmail(): string;
     public function getTelephone(): string;
     public function getAddress(): string;
+    public function toUser(): ?User;
 }

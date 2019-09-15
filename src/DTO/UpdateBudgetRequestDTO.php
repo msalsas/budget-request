@@ -2,6 +2,7 @@
 
 namespace App\DTO;
 
+use App\Entity\Budget\Budget;
 use Symfony\Component\HttpFoundation\Request;
 
 class UpdateBudgetRequestDTO implements UpdateBudgetRequestDTOInterface
@@ -54,5 +55,16 @@ class UpdateBudgetRequestDTO implements UpdateBudgetRequestDTOInterface
     public function getCategory(): string
     {
         return $this->category;
+    }
+
+    public function toBudget(): ?Budget
+    {
+        $budget = new Budget();
+        $budget->setId($this->getId());
+        $budget->setTitle($this->getTitle());
+        $budget->setDescription($this->getDescription());
+        $budget->setCategory($this->getCategory());
+
+        return $budget;
     }
 }

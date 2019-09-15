@@ -38,8 +38,8 @@ class BudgetController extends AbstractController
     public function create(Request $request, BudgetService $budgetService)
     {
         $createBudgetRequestDTO = new CreateBudgetRequestDTO($request);
-        $user = User::fromDTO($createBudgetRequestDTO);
-        $budget = Budget::fromDTO($createBudgetRequestDTO);
+        $budget = $createBudgetRequestDTO->toBudget();
+        $user = $createBudgetRequestDTO->toUser();
 
         try {
             $budgetService->create($budget, $user);
@@ -60,7 +60,7 @@ class BudgetController extends AbstractController
     public function update(int $id, Request $request, BudgetService $budgetService)
     {
         $updateBudgetRequestDTO = new UpdateBudgetRequestDTO($id, $request);
-        $budget = Budget::fromDTO($updateBudgetRequestDTO);
+        $budget = $updateBudgetRequestDTO->toBudget();
 
         try {
             $budgetService->update($budget);

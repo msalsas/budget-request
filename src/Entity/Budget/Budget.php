@@ -119,17 +119,4 @@ class Budget implements BudgetInterface
             self::STATUS_DISCARDED,
         ];
     }
-
-    public static function fromDTO(BudgetRequestDTOInterface $budgetRequestDTO)
-    {
-        $budget = new self;
-        if ($budgetRequestDTO instanceof UpdateBudgetRequestDTO) {
-            $budget->setId($budgetRequestDTO->getId());
-        }
-        $budget->setTitle($budgetRequestDTO->getTitle());
-        $budget->setDescription($budgetRequestDTO->getDescription());
-        $budget->setCategory($budgetRequestDTO->getCategory());
-
-        return $budget;
-    }
 }

@@ -2,6 +2,8 @@
 
 namespace App\DTO;
 
+use App\Entity\Budget\Budget;
+use App\Entity\User\User;
 use Symfony\Component\HttpFoundation\Request;
 
 class CreateBudgetRequestDTO implements CreateBudgetRequestDTOInterface
@@ -78,5 +80,25 @@ class CreateBudgetRequestDTO implements CreateBudgetRequestDTOInterface
     public function getAddress(): string
     {
         return $this->address;
+    }
+
+    public function toBudget(): ?Budget
+    {
+        $budget = new Budget();
+        $budget->setTitle($this->getTitle());
+        $budget->setDescription($this->getDescription());
+        $budget->setCategory($this->getCategory());
+
+        return $budget;
+    }
+
+    public function toUser(): ?User
+    {
+        $user = new User();
+        $user->setEmail($this->getEmail());
+        $user->setTelephone($this->getTelephone());
+        $user->setAddress($this->getAddress());
+
+        return $user;
     }
 }

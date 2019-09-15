@@ -92,14 +92,4 @@ class User implements UserInterface
     {
         $this->budgets = $budgets;
     }
-
-    public static function fromDTO(CreateBudgetRequestDTOInterface $budgetRequestDTO)
-    {
-        $user = new self;
-        $user->setEmail($budgetRequestDTO->getEmail());
-        $user->setTelephone($budgetRequestDTO->getTelephone());
-        $user->setAddress($budgetRequestDTO->getAddress());
-
-        return $user;
-    }
 }
