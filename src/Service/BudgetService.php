@@ -119,7 +119,7 @@ class BudgetService
             $user = $userRepository->findOneBy([self::EMAIL => $email]);
 
             if ($user) {
-                return $user->getBudgets();
+                return $budgetRepository->findBy([self::USER => $user], $orderBy, $limit, $offset);
             } else {
                 throw new NotFoundHttpException(sprintf("User with email %s not found", $email));
             }

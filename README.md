@@ -7,13 +7,8 @@ Documentation
 -------------
 
     GET /budget
-    parameters: query => {email, offset, limit}
-    example: GET /budget?email=johnDoe@email.com
-    Description: Get all budgets by email
-    
-    GET /budget
-    example: GET /budget?offset=20&limit=50
-    Description: Get all budgets paginated
+    example: GET /budget?email=johnDoe@email.com&offset=20&limit=50
+    Description: Get all budgets paginated (optionally by email)
 
     POST /budget
     parameters: json => {title, description, category, email, telephone, address}

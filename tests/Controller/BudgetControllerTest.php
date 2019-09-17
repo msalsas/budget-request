@@ -96,6 +96,41 @@ class BudgetControllerTest extends WebTestCase
         $this->assertEquals(Budget::STATUS_PENDING, $budgets[0][GetBudgetsResponseDTO::STATUS]);
     }
 
+    /**
+     *  @group failing
+     */
+    public function testGetAllPaginated()
+    {
+        EntityCreationHelper::createBunchOfUsersAndBudgets($this->entityManager);
+
+        $this->client->request('GET', '/budget?offset=26&limit=3');
+        $content = $this->client->getResponse()->getContent();
+        $budgets = $this->toArray($content);
+        $this->assertIsArray($budgets);
+
+        $this->assertEquals(3, count($budgets));
+        $this->assertEquals(EntityCreationHelper::DESCRIPTION_PREFIX . '26', $budgets[0][GetBudgetsResponseDTO::DESCRIPTION]);
+        $this->assertEquals(EntityCreationHelper::DESCRIPTION_PREFIX . '27', $budgets[1][GetBudgetsResponseDTO::DESCRIPTION]);
+        $this->assertEquals(EntityCreationHelper::DESCRIPTION_PREFIX . '28', $budgets[2][GetBudgetsResponseDTO::DESCRIPTION]);
+    }
+
+    public function testGetAllByEmailPaginated()
+    {
+        EntityCreationHelper::createBunchOfUsersAndBudgets($this->entityManager);
+
+        $this->client->request('GET', '/budget?email=email0@email.com&offset=5&limit=5');
+        $content = $this->client->getResponse()->getContent();
+        $budgets = $this->toArray($content);
+        $this->assertIsArray($budgets);
+
+        $this->assertEquals(5, count($budgets));
+        $this->assertEquals(EntityCreationHelper::DESCRIPTION_PREFIX . '5', $budgets[0][GetBudgetsResponseDTO::DESCRIPTION]);
+        $this->assertEquals(EntityCreationHelper::DESCRIPTION_PREFIX . '6', $budgets[1][GetBudgetsResponseDTO::DESCRIPTION]);
+        $this->assertEquals(EntityCreationHelper::DESCRIPTION_PREFIX . '7', $budgets[2][GetBudgetsResponseDTO::DESCRIPTION]);
+        $this->assertEquals(EntityCreationHelper::DESCRIPTION_PREFIX . '8', $budgets[3][GetBudgetsResponseDTO::DESCRIPTION]);
+        $this->assertEquals(EntityCreationHelper::DESCRIPTION_PREFIX . '9', $budgets[4][GetBudgetsResponseDTO::DESCRIPTION]);
+    }
+
     public function testGetAllByWrongEmailThrowsException()
     {
         EntityCreationHelper::createUsersAndBudgets($this->entityManager);

@@ -32,6 +32,13 @@ class EntityCreationHelper
     const DESCRIPTION_OTHER = "sunt in culpa qui officia deserunt mollit anim id est laborum.";
     const CATEGORY_OTHER = "Other";
 
+    const EMAIL_PREFIX = "email";
+    const EMAIL_SUFFIX = "@email.com";
+    const TELEPHONE_PREFIX = "342 456 7 - ";
+    const ADDRESS_PREFIX = "c/ Doe, ";
+    const FIRST_TITLE = "A Title";
+    const DESCRIPTION_PREFIX = "Description ";
+    const CATEGORY_PREFIX = "Category ";
 
     const WRONG_ID = 9999999999999999999999999999999999999999999999999999999999;
     const WRONG_TITLE = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
@@ -47,6 +54,32 @@ class EntityCreationHelper
     {
         self::createUserAAndBudgetA($entityManager);
         self::createUserBAndBudgetB($entityManager);
+    }
+
+    public static function createBunchOfUsersAndBudgets(EntityManagerInterface $entityManager)
+    {
+        $title = self::FIRST_TITLE;
+        $index = 0;
+        for ($i = 0; $i < 30; $i++) {
+            $user = new User();
+            $user->setEmail(self::EMAIL_PREFIX . $i . self::EMAIL_SUFFIX);
+            $user->setTelephone(self::TELEPHONE_PREFIX . $i);
+            $user->setAddress(self::ADDRESS_PREFIX . $i);
+            $entityManager->persist($user);
+
+            for($j = 0; $j < 20; $j++) {
+                $budget = new Budget();
+                $budget->setTitle($title++);
+                $budget->setDescription(self::DESCRIPTION_PREFIX . $index);
+                $budget->setCategory(self::CATEGORY_PREFIX . $index);
+                $budget->setUser($user);
+                $budget->setStatus(Budget::STATUS_PENDING);
+                $entityManager->persist($budget);
+                $index++;
+            }
+        }
+
+        $entityManager->flush();
     }
 
     public static function getBudgets()

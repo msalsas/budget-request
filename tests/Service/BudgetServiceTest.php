@@ -463,7 +463,7 @@ class BudgetServiceTest extends TestCase
     {
         $budgets = $this->getBudgetList();
         $budgetRepositoryMock = $this->createMock(BudgetRepositoryInterface::class);
-        $budgetRepositoryMock->expects($this->never())
+        $budgetRepositoryMock->expects($this->once())
             ->method('findBy')
             ->willReturn($budgets);
 
