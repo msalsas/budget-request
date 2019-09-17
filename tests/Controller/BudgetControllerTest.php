@@ -96,9 +96,6 @@ class BudgetControllerTest extends WebTestCase
         $this->assertEquals(Budget::STATUS_PENDING, $budgets[0][GetBudgetsResponseDTO::STATUS]);
     }
 
-    /**
-     *  @group failing
-     */
     public function testGetAllPaginated()
     {
         EntityCreationHelper::createBunchOfUsersAndBudgets($this->entityManager);
