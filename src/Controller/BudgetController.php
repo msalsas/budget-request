@@ -18,6 +18,15 @@ class BudgetController extends AbstractController
     // TODO: Handle custom exceptions
 
     /**
+     * @Route("/", name="index", methods={"GET"})
+     * @return Response
+     */
+    public function index()
+    {
+        return new Response("Welcome to budget-request API. Look at https://github.com/msalsas/budget-request for more info.");
+    }
+
+    /**
      * @Route("/budget", name="get_all", methods={"GET"})
      * @param $request Request
      * @param $budgetService BudgetService
