@@ -108,4 +108,21 @@ class BudgetController extends AbstractController
 
         return new Response("Success", 204);
     }
+
+    /**
+     * @Route("/budget/suggest-category/{id}", name="suggest_category", methods={"GET"}, requirements={"id"="\d+"})
+     * @param $id int
+     * @param $budgetService BudgetService
+     * @return Response
+     */
+    public function suggestCategory(int $id, BudgetService $budgetService)
+    {
+        try {
+            $categoryText = $budgetService->suggestCategory($id);
+        } catch (\Exception $e) {
+            throw new HttpException(403, $e->getMessage());
+        }
+
+        return new Response($categoryText, 200);
+    }
 }

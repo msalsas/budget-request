@@ -4,6 +4,7 @@ namespace App\Helper;
 
 use App\Entity\Budget\Budget;
 use App\Entity\User\User;
+use App\Entity\User\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 class EntityCreationHelper
@@ -45,6 +46,13 @@ class EntityCreationHelper
     const WRONG_EMAIL = "NOT_A_REAL_EMAIL";
     const WRONG_TELEPHONE = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
+    const DESCRIPTION_HEATING = "Presupuesto de colocación de 1 termo a gas-butano de 11 litros junker.";
+    const DESCRIPTION_KITCHEN = "Reformar cocina, cambiando azulejos, suelo, puntos de electricidad y fontanería y techo. Retirada de  muebles antiguos  aproximadamente a partir del mes de junio.";
+    const DESCRIPTION_BATHROOM = "Necesito arreglar el baño de casa, tengo que cambiar el plato de ducha (que es muy pequeño) y poner uno nuevo un poco más grande con mamparas. Lo más económico posible.";
+    const DESCRIPTION_AIR_CONDITIONING = "Presupuesto de mantenimiento i reparación de aire acondicionado de la marca  mitsubishi electric.";
+    const DESCRIPTION_HOUSE_CONSTRUCTIONS = "Necesito presupuesto para construir una casa de dos plantas en churriana de la vega (Granada). Tengo la parcela de 220 metros cuadrados en propiedad. Se trataría de una casa de 3 plantas con 5 o más habitaciones. Estoy pendiente de adquirir el proyecto.";
+
+
     protected $userA;
     protected $userB;
     protected $budgetA;
@@ -82,6 +90,24 @@ class EntityCreationHelper
         $entityManager->flush();
     }
 
+    public static function createBudgetsForMatchingDescription(EntityManagerInterface $entityManager)
+    {
+        $user = self::getUserA();
+        $entityManager->persist($user);
+        self::createBudgetWithDescriptionAndUser(self::DESCRIPTION_HEATING, $user, $entityManager);
+        self::createBudgetWithDescriptionAndUser(self::DESCRIPTION_KITCHEN, $user, $entityManager);
+        self::createBudgetWithDescriptionAndUser(self::DESCRIPTION_BATHROOM, $user, $entityManager);
+        self::createBudgetWithDescriptionAndUser(self::DESCRIPTION_AIR_CONDITIONING, $user, $entityManager);
+        self::createBudgetWithDescriptionAndUser(self::DESCRIPTION_HOUSE_CONSTRUCTIONS, $user, $entityManager);
+    }
+
+    public static function createBudgetsWithoutDescription(EntityManagerInterface $entityManager)
+    {
+        $user = self::getUserA();
+        $entityManager->persist($user);
+        self::createBudgetWithoutDescription($user, $entityManager);
+    }
+
     public static function getBudgets()
     {
         $user = self::getUserA();
@@ -115,6 +141,26 @@ class EntityCreationHelper
         $budget = self::getBudgetB();
         $budget->setUser($user);
         $entityManager->persist($budget);
+        $entityManager->flush();
+    }
+
+    protected static function createBudgetWithDescriptionAndUser(string $description, UserInterface $user, EntityManagerInterface $entityManager)
+    {
+        $budget = self::getBudgetA();
+        $budget->setUser($user);
+        $budget->setDescription($description);
+        $entityManager->persist($budget);
+
+        $entityManager->flush();
+    }
+
+    protected static function createBudgetWithoutDescription(UserInterface $user, EntityManagerInterface $entityManager)
+    {
+        $budget = self::getBudgetA();
+        $budget->setUser($user);
+        $budget->setDescription('');
+        $entityManager->persist($budget);
+
         $entityManager->flush();
     }
 

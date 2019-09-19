@@ -4,6 +4,7 @@ namespace Test\Controller;
 
 use App\DTO\GetBudgetsResponseDTO;
 use App\Entity\Budget\Budget;
+use App\Helper\CategorySuggestionHelper;
 use App\Helper\EntityCreationHelper;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
@@ -364,6 +365,63 @@ class BudgetControllerTest extends WebTestCase
         $this->expectExceptionMessage('No route found for "PUT /budget/discard/1.0E+58"');
 
         $this->client->request('PUT', '/budget/discard/' . EntityCreationHelper::WRONG_ID);
+    }
+
+    public function testSuggestCategoryHeating()
+    {
+        EntityCreationHelper::createBudgetsForMatchingDescription($this->entityManager);
+
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_A);
+        $content = $this->client->getResponse()->getContent();
+        $budgets = $this->toArray($content);
+        $id = $budgets[0][GetBudgetsResponseDTO::ID];
+
+        $this->client->request('GET', '/budget/suggest-category/' . $id);
+        $content = $this->client->getResponse()->getContent();
+
+        $this->assertIsString($content);
+        $this->assertEquals(CategorySuggestionHelper::HEATING_CAT, $content);
+    }
+
+    public function testSuggestCategoryAirConditioning()
+    {
+        EntityCreationHelper::createBudgetsForMatchingDescription($this->entityManager);
+
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_A);
+        $content = $this->client->getResponse()->getContent();
+        $budgets = $this->toArray($content);
+        $id = $budgets[3][GetBudgetsResponseDTO::ID];
+
+        $this->client->request('GET', '/budget/suggest-category/' . $id);
+        $content = $this->client->getResponse()->getContent();
+
+        $this->assertIsString($content);
+        $this->assertEquals(CategorySuggestionHelper::AIR_CONDITIONING_CAT, $content);
+    }
+
+    public function testSuggestCategoryWrongIdThrowsException()
+    {
+        EntityCreationHelper::createBudgetsForMatchingDescription($this->entityManager);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('No route found for "GET /budget/suggest-category/1.0E+58"');
+
+        $this->client->request('GET', '/budget/suggest-category/' . EntityCreationHelper::WRONG_ID);
+    }
+
+    public function testSuggestCategoryEmptyDescriptionThrowsException()
+    {
+        EntityCreationHelper::createBudgetsWithoutDescription($this->entityManager);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('No description found');
+
+        $this->client->request('GET', '/budget?email=' . EntityCreationHelper::EMAIL_A);
+        $content = $this->client->getResponse()->getContent();
+        $budgets = $this->toArray($content);
+        $id = $budgets[0][GetBudgetsResponseDTO::ID];
+
+        $this->client->request('GET', '/budget/suggest-category/' . $id);
     }
 
     protected function createBudgetWithOtherEmail()

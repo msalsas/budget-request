@@ -6,6 +6,7 @@ use App\Entity\Budget\Budget;
 use App\Entity\Budget\BudgetInterface;
 use App\Entity\User\User;
 use App\Entity\User\UserInterface;
+use App\Helper\CategorySuggestionHelper;
 use App\Repository\Budget\BudgetRepositoryInterface;
 use App\Repository\User\UserRepositoryInterface;
 use App\Validator\Validator;
@@ -126,6 +127,21 @@ class BudgetService
         }
 
         return $budgetRepository->findBy([], $orderBy, $limit, $offset);
+    }
+
+    public function suggestCategory(int $id)
+    {
+        $budget = $this->get($id);
+        if (!$budget) {
+            throw new \Exception("No budget found");
+        }
+
+        $description = $budget->getDescription();
+        if (!$description) {
+            throw new \Exception("No description found");
+        }
+
+        return CategorySuggestionHelper::getMatchedCategoryText($description);
     }
 
     protected function exists(integer $id)
