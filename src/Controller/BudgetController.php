@@ -15,6 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BudgetController extends AbstractController
 {
+    // TODO: Handle custom exceptions
+
     /**
      * @Route("/budget", name="get_all", methods={"GET"})
      * @param $request Request
@@ -24,11 +26,17 @@ class BudgetController extends AbstractController
     public function getAll(Request $request, BudgetService $budgetService)
     {
         $getBudgetRequestDTO = new GetBudgetsRequestDTO($request);
+        // TODO: Validate DTO and handle exceptions
         $email = $getBudgetRequestDTO->getEmail() ?: null;
         $offset = $getBudgetRequestDTO->getOffset() ?: 0;
         $limit = $getBudgetRequestDTO->getLimit() ?: 20;
 
-        $budgets = $budgetService->getAllPaginated($email, $offset, $limit);
+        try {
+            $budgets = $budgetService->getAllPaginated($email, $offset, $limit);
+        } catch (\Exception $e) {
+            // TODO: Do not give info about the error
+            throw new HttpException(403, $e->getMessage());
+        }
 
         return GetBudgetsResponseDTO::toDTO($budgets);
     }
@@ -42,12 +50,14 @@ class BudgetController extends AbstractController
     public function create(Request $request, BudgetService $budgetService)
     {
         $createBudgetRequestDTO = new CreateBudgetRequestDTO($request);
+        // TODO: Validate DTO and handle exceptions
         $budget = $createBudgetRequestDTO->toBudget();
         $user = $createBudgetRequestDTO->toUser();
 
         try {
             $budgetService->create($budget, $user);
         } catch (\Exception $e) {
+            // TODO: Do not give SO MUCH info about the error
             throw new HttpException(403, $e->getMessage());
         }
 
@@ -64,11 +74,13 @@ class BudgetController extends AbstractController
     public function update(int $id, Request $request, BudgetService $budgetService)
     {
         $updateBudgetRequestDTO = new UpdateBudgetRequestDTO($id, $request);
+        // TODO: Validate DTO
         $budget = $updateBudgetRequestDTO->toBudget();
 
         try {
             $budgetService->update($budget);
         } catch (\Exception $e) {
+            // TODO: Do not give SO MUCH info about the error
             throw new HttpException(403, $e->getMessage());
         }
 
@@ -86,6 +98,7 @@ class BudgetController extends AbstractController
         try {
             $budgetService->publish($id);
         } catch (\Exception $e) {
+            // TODO: Do not give SO MUCH info about the error
             throw new HttpException(403, $e->getMessage());
         }
 
@@ -103,6 +116,7 @@ class BudgetController extends AbstractController
         try {
             $budgetService->discard($id);
         } catch (\Exception $e) {
+            // TODO: Do not give SO MUCH info about the error
             throw new HttpException(403, $e->getMessage());
         }
 
@@ -120,6 +134,7 @@ class BudgetController extends AbstractController
         try {
             $categoryText = $budgetService->suggestCategory($id);
         } catch (\Exception $e) {
+            // TODO: Do not give SO MUCH info about the error
             throw new HttpException(403, $e->getMessage());
         }
 
