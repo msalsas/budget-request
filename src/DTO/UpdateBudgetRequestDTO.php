@@ -27,32 +27,31 @@ class UpdateBudgetRequestDTO implements UpdateBudgetRequestDTOInterface
 
     public function __construct(int $id, Request $request)
     {
-        $content = $request->request->all();
-        if ($content && isset($content[0])) {
-            $data = json_decode($content[0], true);
+        if ($content = $request->getContent()) {
+            $data = json_decode($content, true);
             $this->id = $id;
-            $this->title = $data['title'];
-            $this->description = $data['description'];
-            $this->category = $data['category'];
+            $this->title = isset($data['title']) ? $data['title'] : null;
+            $this->description = isset($data['description']) ? $data['description'] : null;
+            $this->category = isset($data['category']) ? $data['category'] : null;
         }
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function getCategory(): string
+    public function getCategory(): ?string
     {
         return $this->category;
     }
@@ -60,7 +59,10 @@ class UpdateBudgetRequestDTO implements UpdateBudgetRequestDTOInterface
     public function toBudget(): ?Budget
     {
         $budget = new Budget();
-        $budget->setId($this->getId());
+        $id = $this->getId();
+        if (isset($id)) {
+            $budget->setId($id);
+        }
         $budget->setTitle($this->getTitle());
         $budget->setDescription($this->getDescription());
         $budget->setCategory($this->getCategory());

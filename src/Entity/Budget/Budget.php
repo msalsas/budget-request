@@ -66,7 +66,7 @@ class Budget implements BudgetInterface
         return $this->title;
     }
 
-    public function setTitle(string $title)
+    public function setTitle(string $title = null)
     {
         $this->title = $title;
     }
@@ -76,7 +76,7 @@ class Budget implements BudgetInterface
         return $this->description;
     }
 
-    public function setDescription(string $description)
+    public function setDescription(string $description = null)
     {
         $this->description = $description;
     }
@@ -86,7 +86,7 @@ class Budget implements BudgetInterface
         return $this->category;
     }
 
-    public function setCategory(string $category)
+    public function setCategory(string $category = null)
     {
         $this->category = $category;
     }

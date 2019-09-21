@@ -73,13 +73,16 @@ class BudgetService
 
         $this->validateUpdate($existingBudget, $budget);
 
-        if ($title = $budget->getTitle()) {
+        $title = $budget->getTitle();
+        if (isset($title)) {
             $existingBudget->setTitle($title);
         }
-        if ($description = $budget->getDescription()) {
+        $description = $budget->getDescription();
+        if (isset($description)) {
             $existingBudget->setDescription($description);
         }
-        if ($category = $budget->getCategory()) {
+        $category = $budget->getCategory();
+        if (isset($category)) {
             $existingBudget->setCategory($category);
         }
 

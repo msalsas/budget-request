@@ -58,7 +58,7 @@ class User implements UserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email)
+    public function setEmail(string $email = null)
     {
         $this->email = $email;
     }
@@ -68,7 +68,7 @@ class User implements UserInterface
         return $this->telephone;
     }
 
-    public function setTelephone(string $telephone)
+    public function setTelephone(string $telephone = null)
     {
         $this->telephone = $telephone;
     }
@@ -78,7 +78,7 @@ class User implements UserInterface
         return $this->address;
     }
 
-    public function setAddress(string $address)
+    public function setAddress(string $address = null)
     {
         $this->address = $address;
     }

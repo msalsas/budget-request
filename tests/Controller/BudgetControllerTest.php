@@ -435,7 +435,7 @@ class BudgetControllerTest extends WebTestCase
             GetBudgetsResponseDTO::ADDRESS => EntityCreationHelper::ADDRESS_A,
         );
 
-        $this->client->request('POST', '/budget', [json_encode($parameters, true)]);
+        $this->client->request('POST', '/budget', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode($parameters, true));
     }
 
     protected function createBudgetWithExistingEmail()
@@ -449,7 +449,7 @@ class BudgetControllerTest extends WebTestCase
             GetBudgetsResponseDTO::ADDRESS => EntityCreationHelper::ADDRESS_OTHER,
         );
 
-        $this->client->request('POST', '/budget', [json_encode($parameters, true)]);
+        $this->client->request('POST', '/budget', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode($parameters, true));
     }
 
     protected function createBudgetWithWrongEmail()
@@ -463,7 +463,7 @@ class BudgetControllerTest extends WebTestCase
             GetBudgetsResponseDTO::ADDRESS => EntityCreationHelper::ADDRESS_A,
         );
 
-        $this->client->request('POST', '/budget', [json_encode($parameters, true)]);
+        $this->client->request('POST', '/budget', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode($parameters, true));
     }
 
     protected function createBudgetWithWrongTelephone()
@@ -477,7 +477,7 @@ class BudgetControllerTest extends WebTestCase
             GetBudgetsResponseDTO::ADDRESS => EntityCreationHelper::ADDRESS_A,
         );
 
-        $this->client->request('POST', '/budget', [json_encode($parameters, true)]);
+        $this->client->request('POST', '/budget', [], [], array('CONTENT_TYPE' => 'application/json'), json_encode($parameters, true));
     }
 
     protected function updateBudgetWithExistingId()
@@ -493,7 +493,7 @@ class BudgetControllerTest extends WebTestCase
             GetBudgetsResponseDTO::CATEGORY => EntityCreationHelper::CATEGORY_OTHER,
         );
 
-        $this->client->request('PUT', '/budget/' . $id, [json_encode($parameters, true)]);
+        $this->client->request('PUT', '/budget/' . $id, [], [], array('CONTENT_TYPE' => 'application/json'), json_encode($parameters, true));
     }
 
     protected function updateBudgetWithWrongId()
@@ -506,7 +506,7 @@ class BudgetControllerTest extends WebTestCase
             GetBudgetsResponseDTO::CATEGORY => EntityCreationHelper::CATEGORY_OTHER,
         );
 
-        $this->client->request('PUT', '/budget/' . $id, [json_encode($parameters, true)]);
+        $this->client->request('PUT', '/budget/' . $id, [], [], array('CONTENT_TYPE' => 'application/json'), json_encode($parameters, true));
     }
 
     protected function updateBudgetWithWrongTitle()
@@ -522,7 +522,7 @@ class BudgetControllerTest extends WebTestCase
             GetBudgetsResponseDTO::CATEGORY => EntityCreationHelper::CATEGORY_OTHER,
         );
 
-        $this->client->request('PUT', '/budget/' . $id, [json_encode($parameters, true)]);
+        $this->client->request('PUT', '/budget/' . $id, [], [], array('CONTENT_TYPE' => 'application/json'), json_encode($parameters, true));
     }
 
     protected function toJson(array $array)

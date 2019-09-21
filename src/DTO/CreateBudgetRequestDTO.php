@@ -40,44 +40,43 @@ class CreateBudgetRequestDTO implements CreateBudgetRequestDTOInterface
 
     public function __construct(Request $request)
     {
-        $content = $request->request->all();
-        if ($content && isset($content[0])) {
-            $data = json_decode($content[0], true);
-            $this->title = $data['title'];
-            $this->description = $data['description'];
-            $this->category = $data['category'];
-            $this->email = $data['email'];
-            $this->telephone = $data['telephone'];
-            $this->address = $data['address'];
+        if ($content = $request->getContent()) {
+            $data = json_decode($content, true);
+            $this->title = isset($data['title']) ? $data['title'] : null;
+            $this->description = isset($data['description']) ? $data['description'] : null;
+            $this->category = isset($data['category']) ? $data['category'] : null;
+            $this->email = isset($data['email']) ? $data['email'] : '';
+            $this->telephone = isset($data['telephone']) ? $data['telephone'] : null;
+            $this->address = isset($data['address']) ? $data['address'] : null;
         }
     }
 
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function getCategory(): string
+    public function getCategory(): ?string
     {
         return $this->category;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function getTelephone(): string
+    public function getTelephone(): ?string
     {
         return $this->telephone;
     }
 
-    public function getAddress(): string
+    public function getAddress(): ?string
     {
         return $this->address;
     }
