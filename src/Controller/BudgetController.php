@@ -16,6 +16,23 @@ use Symfony\Component\Routing\Annotation\Route;
 class BudgetController extends AbstractController
 {
     // TODO: Handle custom exceptions
+    // TODO: Handle authentication
+
+    /**
+     * Preflight action. Set required headers for non simple request.
+     *
+     * @Route("/{url}", name="pre_flight", methods={"OPTIONS", "PUT"}, requirements={"url"=".+"})
+     * @param Request $request
+     * @return Response
+     */
+    public function preFlightAction(Request $request)
+    {
+        $response = new Response();
+        $response->headers->set('Access-Control-Allow-Methods', $request->headers->get('Access-Control-Request-Method'));
+        $response->headers->set('Access-Control-Allow-Headers', $request->headers->get('Access-Control-Request-Headers'));
+
+        return $response;
+    }
 
     /**
      * @Route("/", name="index", methods={"GET"})
@@ -70,7 +87,7 @@ class BudgetController extends AbstractController
             throw new HttpException(403, $e->getMessage());
         }
 
-        return new Response("Success", 201);
+        return new Response($budget->getId(), 201);
     }
 
     /**
@@ -93,7 +110,7 @@ class BudgetController extends AbstractController
             throw new HttpException(403, $e->getMessage());
         }
 
-        return new Response("Success", 204);
+        return new Response($budget->getId(), 204);
     }
 
     /**

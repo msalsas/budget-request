@@ -11,8 +11,6 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    # makes classes in src/Service and src/Repository available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
     App\Service\:
         resource: '../src/Service/*'
     App\Validator\:
@@ -22,11 +20,10 @@ services:
     App\DataFixtures\:
         resource: '../src/DataFixtures/*'
 
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\EventListener\KernelResponseListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.response }
