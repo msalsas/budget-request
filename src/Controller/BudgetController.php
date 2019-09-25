@@ -21,7 +21,7 @@ class BudgetController extends AbstractController
     /**
      * Preflight action. Set required headers for non simple request.
      *
-     * @Route("/{url}", name="pre_flight", methods={"OPTIONS", "PUT"}, requirements={"url"=".+"})
+     * @Route("/{url}", name="pre_flight", methods={"OPTIONS"}, requirements={"url"=".+"})
      * @param Request $request
      * @return Response
      */
